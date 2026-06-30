@@ -1,0 +1,34 @@
+cash:
+  type: cash
+  annual_yield: 0.015
+
+money_market_etf:
+  symbol: "511880"
+  name: "money market ETF example"
+  enabled: false
+
+universe:
+  - symbol: "510300"
+    name: "CSI 300 ETF example"
+    bucket: "broad"
+  - symbol: "510500"
+    name: "CSI 500 ETF example"
+    bucket: "broad"
+  - symbol: "159915"
+    name: "ChiNext ETF example"
+    bucket: "growth"
+  - symbol: "588000"
+    name: "STAR 50 ETF example"
+    bucket: "growth"
+  - symbol: "512880"
+    name: "Securities ETF example"
+    bucket: "sector"
+  - symbol: "512690"
+    name: "Wine ETF example"
+    bucket: "sector"
+  - symbol: "518880"
+    name: "Gold ETF example"
+    bucket: "commodity"
+  - symbol: "513500"
+    name: "S&P 500 ETF example"
+    bucket: "overseas"

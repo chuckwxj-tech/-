@@ -1,0 +1,15 @@
+momentum:
+  lookbacks: [1]
+  weights: [1.0]
+  top_k: 1
+  max_weight: 1.0
+  rebalance_freq: daily
+  volatility_adjusted: false
+
+costs:
+  commission_bps: 0
+  slippage_bps: 0
+  min_fee: 0
+
+backtest:
+  initial_cash: 1000000

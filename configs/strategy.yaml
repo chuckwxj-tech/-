@@ -1,0 +1,13 @@
+momentum:
+  lookbacks: [20, 60, 120, 240]
+  weights: [0.20, 0.40, 0.30, 0.10]
+  volatility_adjusted: true
+  volatility_lookback: 60
+  trend_ma: 120
+  top_k: 3
+  max_weight: 0.50
+  rebalance_freq: weekly
+
+data:
+  start: "2015-01-01"
+  adjust: qfq
