@@ -2,6 +2,8 @@
 
 This repository implements an A-share ETF momentum research framework. Agents must follow these constraints before changing code.
 
+When multiple agents (e.g. Claude and Codex) work together, also follow `docs/COLLABORATION.md` for role division and handoff rules.
+
 ## Working Rules
 
 - State assumptions before implementation when requirements are ambiguous.
