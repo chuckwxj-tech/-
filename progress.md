@@ -76,12 +76,17 @@
   - added optional `cash_annual_yield` support to the pandas backtest engine and pipeline
   - ran the no-filter vs MA120 + cash experiment for 2023-06-30 to 2026-06-30
   - wrote `docs/P0_TREND_CASH_EXPERIMENT_20260630.md` and `docs/results/p0_trend_cash_20260630/`
+- Completed TASK-0011 category cap:
+  - added optional `max_per_category` support to momentum target selection
+  - added tests for `max_per_category=None` backward compatibility and cap-1 category skipping
+  - ran no-cap, cap-2, and cap-1 top3 experiments for 2023-06-30 to 2026-06-30
+  - wrote `docs/P1_CATEGORY_CAP_20260630.md` and `docs/results/p1_category_cap_20260630/`
 
 ## Unfinished
 
 - The current backtest engine is a minimal research engine. It supports next-bar open execution, cash, trades, positions, and simple costs, but not full risk controls.
 - Metrics TODO P1/P2 remain: Sortino/downside deviation, win rate, profit factor, trading cost stats, IC/ICIR, grouped monotonicity, and long-short spread.
-- Experiments TODO P1/P2 remain: top_k/top5/top8 comparison, same-category cap, lower max_weight, signal parameter comparisons, and IC diagnostics.
+- Experiments TODO P1/P2 remain: top_k/top5/top8 comparison, lower max_weight, signal parameter comparisons, and IC diagnostics.
 - Parameter scan, walk-forward, and Streamlit UI are future loops.
 
 ## Known Risks
@@ -90,12 +95,13 @@
 - Raw cache files are keyed only by symbol as requested. A later loop should add metadata checks before reusing cached data for a wider date range.
 - Raw and artifact outputs are ignored by git. Re-run the commands in `README.md` if the local cache is removed.
 - P0 trend filtering did not reduce the wide-pool strategy drawdown because it produced only two partial-cash rebalance signals in the 2023-06-30 to 2026-06-30 window.
+- Category capping alone on top3 reduced max drawdown only modestly and reduced Sharpe. It is a risk-control parameter, not a standalone fix.
 
 ## Next Loop Recommendation
 
 Next, improve the research output quality:
 
-1. Run Experiments TODO P1: top5/top8, same-category cap, and lower max_weight to address concentration risk.
+1. Run the remaining P1 experiments: top5/top8 comparison and lower max_weight.
 2. Add Metrics TODO P1: Sortino, downside deviation, win rate, profit factor, and cost stats.
 3. Add Metrics TODO P2: IC/ICIR, grouped monotonicity, and long-short spread.
 4. Add parameter scan and walk-forward workflows.

@@ -95,6 +95,81 @@ def test_trend_filter_clears_targets_when_no_symbol_qualifies() -> None:
     assert targets.loc[pd.Timestamp("2024-01-03")].tolist() == [0.0, 0.0]
 
 
+def test_category_cap_none_preserves_existing_momentum_targets() -> None:
+    panel = _panel_from_rows(
+        [
+            ("2024-01-01", "100000", 100.0, 100.0),
+            ("2024-01-01", "200000", 100.0, 100.0),
+            ("2024-01-01", "300000", 100.0, 100.0),
+            ("2024-01-02", "100000", 130.0, 130.0),
+            ("2024-01-02", "200000", 120.0, 120.0),
+            ("2024-01-02", "300000", 110.0, 110.0),
+        ]
+    )
+    close = panel.pivot(index="date", columns="symbol", values="close")
+    config = MomentumConfig(
+        lookbacks=[1],
+        weights=[1.0],
+        top_k=3,
+        max_weight=1.0,
+        rebalance_freq="daily",
+        volatility_adjusted=False,
+    )
+
+    baseline = build_momentum_targets(close, config)
+    with_category_map = build_momentum_targets(
+        close,
+        MomentumConfig.from_mapping(
+            {
+                "lookbacks": [1],
+                "weights": [1.0],
+                "top_k": 3,
+                "max_weight": 1.0,
+                "rebalance_freq": "daily",
+                "volatility_adjusted": False,
+                "max_per_category": None,
+            }
+        ),
+        category_map={"100000": "tech", "200000": "tech", "300000": "financials"},
+    )
+
+    pd.testing.assert_frame_equal(with_category_map, baseline)
+
+
+def test_momentum_targets_limit_symbols_from_same_category() -> None:
+    panel = _panel_from_rows(
+        [
+            ("2024-01-01", "100000", 100.0, 100.0),
+            ("2024-01-01", "200000", 100.0, 100.0),
+            ("2024-01-01", "300000", 100.0, 100.0),
+            ("2024-01-02", "100000", 130.0, 130.0),
+            ("2024-01-02", "200000", 120.0, 120.0),
+            ("2024-01-02", "300000", 110.0, 110.0),
+        ]
+    )
+    close = panel.pivot(index="date", columns="symbol", values="close")
+
+    targets = build_momentum_targets(
+        close,
+        MomentumConfig(
+            lookbacks=[1],
+            weights=[1.0],
+            top_k=3,
+            max_weight=1.0,
+            rebalance_freq="daily",
+            volatility_adjusted=False,
+            max_per_category=1,
+        ),
+        category_map={"100000": "tech", "200000": "tech", "300000": "financials"},
+    )
+
+    row = targets.loc[pd.Timestamp("2024-01-02")]
+    assert row["100000"] == 1 / 3
+    assert row["200000"] == 0.0
+    assert row["300000"] == 1 / 3
+    assert row.sum() == 2 / 3
+
+
 def test_run_backtest_accrues_cash_yield_between_sessions() -> None:
     panel = _panel_from_rows(
         [

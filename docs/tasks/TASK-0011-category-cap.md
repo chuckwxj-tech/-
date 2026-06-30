@@ -1,6 +1,6 @@
 # TASK-0011: 动量选股加「同类别持仓上限」
 
-> 状态：TODO
+> 状态：DONE `(codex)`
 > 分支：`task/TASK-0011-category-cap`　一个 TASK = 一个分支 = 一个 PR。
 > 关联：`docs/EXPERIMENTS_TODO.md` P1「单类别持仓上限」。
 
@@ -34,13 +34,13 @@ P0 实验（`docs/P0_TREND_CASH_EXPERIMENT_20260630.md`）证明：加回 MA120 
   并附**同区间基准**（有效池等权、剔黄金）对比 CAGR/波动/最大回撤/夏普/Calmar。
 
 ## 验收标准
-- [ ] `max_per_category=None` 时结果与现状**完全一致**（回归不变，用测试锁定）。
-- [ ] `max_per_category=1` 时，任一调仓日的持仓中同一类别标的数 ≤ 1（用构造数据的测试断言）。
-- [ ] 类别满额时正确顺延到下一个高分、不同类别的标的；候选不足时持仓数可少于 top_k（剩余按既有规则处理，不得凭空补仓）。
-- [ ] 报告给出三档 + 基准的横向指标表，并写一句结论：上限是否降低了最大回撤、夏普是否改善。
-- [ ] `pytest` 通过（新逻辑必须有测试）。
-- [ ] `ruff check .` 通过。
-- [ ] smoke：`python -m aetf_momentum.app.cli backtest run --factor-preset daily_momentum --panel examples/sample_panel.csv --output artifacts/smoke` 成功。
+- [x] `max_per_category=None` 时结果与现状**完全一致**（回归不变，用测试锁定）。`(codex)`
+- [x] `max_per_category=1` 时，任一调仓日的持仓中同一类别标的数 ≤ 1（用构造数据的测试断言）。`(codex)`
+- [x] 类别满额时正确顺延到下一个高分、不同类别的标的；候选不足时持仓数可少于 top_k（剩余按既有规则处理，不得凭空补仓）。`(codex)`
+- [x] 报告给出三档 + 基准的横向指标表，并写一句结论：上限是否降低了最大回撤、夏普是否改善。见 `docs/P1_CATEGORY_CAP_20260630.md` `(codex)`
+- [x] `pytest` 通过（新逻辑必须有测试）。`(codex)`
+- [x] `ruff check .` 通过。`(codex)`
+- [x] smoke：`python -m aetf_momentum.app.cli backtest run --factor-preset daily_momentum --panel examples/sample_panel.csv --output artifacts/smoke` 成功。`(codex)`
 
 ## 风险点
 - **未来函数**：类别映射是静态元数据，不得用任何含未来信息的分类（如按全样本表现归类）。仅用上市即确定的属性。

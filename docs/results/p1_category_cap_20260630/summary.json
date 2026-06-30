@@ -1,0 +1,162 @@
+{
+  "assumptions": {
+    "data": {
+      "panel": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\panel_qfq_no_gold.csv",
+      "universe": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\valid_universe_no_gold.csv",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "universe_size": 253,
+      "unknown_category_count": 0,
+      "price_fill": "forward fill after listing; no pre-listing fill"
+    },
+    "costs": {
+      "commission_bps": 2.5,
+      "slippage_bps": 5.0,
+      "min_fee": 0.0
+    },
+    "cash_annual_yield": 0.015,
+    "base_momentum": {
+      "lookbacks": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "weights": [
+        0.2,
+        0.4,
+        0.3,
+        0.1
+      ],
+      "top_k": 3,
+      "max_weight": 0.5,
+      "rebalance_freq": "biweekly",
+      "volatility_adjusted": true,
+      "volatility_lookback": 60,
+      "trend_ma": null
+    },
+    "scenarios": [
+      {
+        "name": "no_category_cap",
+        "max_per_category": null
+      },
+      {
+        "name": "category_cap2",
+        "max_per_category": 2
+      },
+      {
+        "name": "category_cap1",
+        "max_per_category": 1
+      }
+    ],
+    "benchmark_source": "docs\\results\\broad_etf_200_biweekly_top3_20260630\\summary.json"
+  },
+  "scenarios": [
+    {
+      "name": "no_category_cap",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 2047086.185351467,
+      "total_return": 1.0470861853514668,
+      "trades": 331,
+      "avg_cash_weight": 0.00826446281008035,
+      "cagr": 0.2823236854796509,
+      "annualized_return": 0.3043942985319587,
+      "annualized_volatility": 0.3331300733263201,
+      "max_drawdown": -0.387214548988012,
+      "max_drawdown_start": "2024-11-07",
+      "max_drawdown_trough": "2025-04-07",
+      "max_drawdown_recovery": "2026-01-28",
+      "max_underwater_days": 298,
+      "sharpe": 0.9137400760386678,
+      "calmar": 0.729114353315251,
+      "annualized_turnover": 23.484895792770367,
+      "max_per_category": null,
+      "rebalance_signals": 77,
+      "avg_target_cash_weight": 0.0,
+      "partial_cash_rebalances": 0,
+      "latest_signal_date": "2026-06-26",
+      "latest_signal": "562590,588170,588710",
+      "latest_signal_categories": "半导体/芯片,半导体/芯片,半导体/芯片",
+      "latest_signal_cash_weight": 0.0
+    },
+    {
+      "name": "category_cap2",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 1971326.5554516234,
+      "total_return": 0.9713265554516235,
+      "trades": 336,
+      "avg_cash_weight": 0.008264462810099321,
+      "cagr": 0.26564787079923335,
+      "annualized_return": 0.2890254839304191,
+      "annualized_volatility": 0.3257405006394926,
+      "max_drawdown": -0.3798290769058603,
+      "max_drawdown_start": "2024-11-11",
+      "max_drawdown_trough": "2025-04-07",
+      "max_drawdown_recovery": "2025-09-25",
+      "max_underwater_days": 294,
+      "sharpe": 0.8872875290699354,
+      "calmar": 0.6993879272309463,
+      "annualized_turnover": 24.61009749728275,
+      "max_per_category": 2,
+      "rebalance_signals": 77,
+      "avg_target_cash_weight": 0.0,
+      "partial_cash_rebalances": 0,
+      "latest_signal_date": "2026-06-26",
+      "latest_signal": "588020,588170,588710",
+      "latest_signal_categories": "宽基/规模,半导体/芯片,半导体/芯片",
+      "latest_signal_cash_weight": 0.0
+    },
+    {
+      "name": "category_cap1",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 1902857.1396248208,
+      "total_return": 0.9028571396248208,
+      "trades": 344,
+      "avg_cash_weight": 0.008264462810090198,
+      "cagr": 0.2502128682680158,
+      "annualized_return": 0.27009497637656993,
+      "annualized_volatility": 0.3044897434897308,
+      "max_drawdown": -0.3554230807356862,
+      "max_drawdown_start": "2024-11-11",
+      "max_drawdown_trough": "2025-04-07",
+      "max_drawdown_recovery": "2025-09-01",
+      "max_underwater_days": 295,
+      "sharpe": 0.8870412949908743,
+      "calmar": 0.7039859869260686,
+      "annualized_turnover": 26.519400033634795,
+      "max_per_category": 1,
+      "rebalance_signals": 77,
+      "avg_target_cash_weight": 0.0,
+      "partial_cash_rebalances": 0,
+      "latest_signal_date": "2026-06-26",
+      "latest_signal": "515050,588020,588710",
+      "latest_signal_categories": "通信/5G,宽基/规模,半导体/芯片",
+      "latest_signal_cash_weight": 0.0
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "有效池等权持有(剔除黄金)",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 1759444.0374990748,
+      "total_return": 0.7594440374990747,
+      "cagr": 0.2166667697026432,
+      "annualized_return": 0.22154162648939352,
+      "annualized_volatility": 0.2247765615487243,
+      "max_drawdown": -0.25321715838100944,
+      "max_drawdown_start": "2023-08-04",
+      "max_drawdown_trough": "2024-02-05",
+      "max_drawdown_recovery": "2024-10-08",
+      "sharpe": 0.9856082189484443,
+      "calmar": 0.8556559558915443
+    }
+  ]
+}

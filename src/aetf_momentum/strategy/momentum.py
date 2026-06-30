@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -19,6 +20,7 @@ class MomentumConfig:
     volatility_adjusted: bool = True
     volatility_lookback: int = 60
     trend_ma: int | None = None
+    max_per_category: int | None = None
 
     @classmethod
     def from_mapping(cls, values: dict[str, Any]) -> MomentumConfig:
@@ -32,6 +34,11 @@ class MomentumConfig:
             volatility_adjusted=bool(values.get("volatility_adjusted", cls.volatility_adjusted)),
             volatility_lookback=int(values.get("volatility_lookback", cls.volatility_lookback)),
             trend_ma=int(trend_ma) if trend_ma else None,
+            max_per_category=(
+                int(values["max_per_category"])
+                if values.get("max_per_category") is not None
+                else None
+            ),
         )
 
     def __post_init__(self) -> None:
@@ -41,6 +48,8 @@ class MomentumConfig:
             raise ValueError("top_k must be >= 1")
         if self.max_weight <= 0:
             raise ValueError("max_weight must be positive")
+        if self.max_per_category is not None and self.max_per_category < 1:
+            raise ValueError("max_per_category must be >= 1")
 
 
 def build_momentum_scores(close: pd.DataFrame, config: MomentumConfig) -> pd.DataFrame:
@@ -60,7 +69,11 @@ def build_momentum_scores(close: pd.DataFrame, config: MomentumConfig) -> pd.Dat
     return scores.replace([np.inf, -np.inf], np.nan)
 
 
-def build_momentum_targets(close: pd.DataFrame, config: MomentumConfig) -> pd.DataFrame:
+def build_momentum_targets(
+    close: pd.DataFrame,
+    config: MomentumConfig,
+    category_map: Mapping[str, str] | pd.Series | None = None,
+) -> pd.DataFrame:
     close = close.sort_index()
     scores = build_momentum_scores(close, config)
     targets = pd.DataFrame(np.nan, index=close.index, columns=close.columns)
@@ -71,11 +84,38 @@ def build_momentum_targets(close: pd.DataFrame, config: MomentumConfig) -> pd.Da
         targets.loc[current_date, :] = 0.0
         if row.empty:
             continue
-        selected = row.head(config.top_k).index
+        selected = _select_symbols(row, config, category_map)
         weight = min(1.0 / config.top_k, config.max_weight)
         targets.loc[current_date, selected] = weight
 
     return targets
+
+
+def _select_symbols(
+    scores: pd.Series,
+    config: MomentumConfig,
+    category_map: Mapping[str, str] | pd.Series | None,
+) -> list[Any]:
+    if config.max_per_category is None:
+        return list(scores.head(config.top_k).index)
+
+    selected: list[Any] = []
+    category_counts: dict[str, int] = {}
+    for symbol in scores.index:
+        category = _category_for(symbol, category_map)
+        if category_counts.get(category, 0) >= config.max_per_category:
+            continue
+        selected.append(symbol)
+        category_counts[category] = category_counts.get(category, 0) + 1
+        if len(selected) >= config.top_k:
+            break
+    return selected
+
+
+def _category_for(symbol: object, category_map: Mapping[str, str] | pd.Series | None) -> str:
+    if category_map is None:
+        return "unknown"
+    return str(category_map.get(symbol, "unknown"))
 
 
 def _rebalance_dates(index: pd.DatetimeIndex, freq: RebalanceFreq) -> pd.DatetimeIndex:
