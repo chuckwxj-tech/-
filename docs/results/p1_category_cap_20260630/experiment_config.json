@@ -1,0 +1,52 @@
+{
+  "data": {
+    "panel": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\panel_qfq_no_gold.csv",
+    "universe": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\valid_universe_no_gold.csv",
+    "start": "2023-06-30",
+    "end": "2026-06-30",
+    "universe_size": 253,
+    "unknown_category_count": 0,
+    "price_fill": "forward fill after listing; no pre-listing fill"
+  },
+  "costs": {
+    "commission_bps": 2.5,
+    "slippage_bps": 5.0,
+    "min_fee": 0.0
+  },
+  "cash_annual_yield": 0.015,
+  "base_momentum": {
+    "lookbacks": [
+      20,
+      60,
+      120,
+      240
+    ],
+    "weights": [
+      0.2,
+      0.4,
+      0.3,
+      0.1
+    ],
+    "top_k": 3,
+    "max_weight": 0.5,
+    "rebalance_freq": "biweekly",
+    "volatility_adjusted": true,
+    "volatility_lookback": 60,
+    "trend_ma": null
+  },
+  "scenarios": [
+    {
+      "name": "no_category_cap",
+      "max_per_category": null
+    },
+    {
+      "name": "category_cap2",
+      "max_per_category": 2
+    },
+    {
+      "name": "category_cap1",
+      "max_per_category": 1
+    }
+  ],
+  "benchmark_source": "docs\\results\\broad_etf_200_biweekly_top3_20260630\\summary.json"
+}
