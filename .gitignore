@@ -6,3 +6,6 @@ __pycache__/
 
 cache/
 artifacts/
+data/
+logs/
+.env

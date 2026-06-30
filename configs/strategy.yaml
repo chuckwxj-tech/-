@@ -11,3 +11,7 @@ momentum:
 data:
   start: "2015-01-01"
   adjust: qfq
+
+backtest:
+  initial_cash: 1000000
+  cash_annual_yield: 0.015

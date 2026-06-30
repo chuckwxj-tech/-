@@ -1,0 +1,319 @@
+{
+  "assumptions": {
+    "source": "v3 panel with commodity gold ETFs removed",
+    "removed_gold_symbols": [
+      {
+        "代码": "518600",
+        "名称": "金ETF广发"
+      },
+      {
+        "代码": "518680",
+        "名称": "金ETF富国"
+      },
+      {
+        "代码": "518860",
+        "名称": "上海金ETF建信"
+      },
+      {
+        "代码": "518890",
+        "名称": "上海金ETF中银"
+      },
+      {
+        "代码": "159830",
+        "名称": "金ETF天弘"
+      },
+      {
+        "代码": "159831",
+        "名称": "金ETF嘉实"
+      },
+      {
+        "代码": "159834",
+        "名称": "金ETF南方"
+      }
+    ],
+    "rebalance": "biweekly top3 equal weight",
+    "execution": "next trading day open",
+    "costs": "2.5bps+5bps"
+  },
+  "strategy": {
+    "start": "2023-06-30",
+    "end": "2026-06-30",
+    "initial": 1000000.0,
+    "final": 2046254.4749550333,
+    "total_return": 1.0462544749550333,
+    "cagr": 0.2821428202028984,
+    "annualized_return": 0.3042638356375143,
+    "annualized_volatility": 0.333161802014916,
+    "max_drawdown": -0.38721454898807917,
+    "max_drawdown_start": "2024-11-07",
+    "max_drawdown_trough": "2025-04-07",
+    "max_drawdown_recovery": "2026-01-28",
+    "sharpe": 0.9132614657423784,
+    "calmar": 0.7286472601306736,
+    "universe_size": 253,
+    "removed_gold_count": 7,
+    "trades": 331,
+    "rebalance_signals": 77
+  },
+  "benchmarks": [
+    {
+      "name": "有效池等权持有(剔除黄金)",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 1759444.0374990748,
+      "total_return": 0.7594440374990747,
+      "cagr": 0.2166667697026432,
+      "annualized_return": 0.22154162648939352,
+      "annualized_volatility": 0.2247765615487243,
+      "max_drawdown": -0.25321715838100944,
+      "max_drawdown_start": "2023-08-04",
+      "max_drawdown_trough": "2024-02-05",
+      "max_drawdown_recovery": "2024-10-08",
+      "sharpe": 0.9856082189484443,
+      "calmar": 0.8556559558915443
+    }
+  ],
+  "valid_category_distribution": {
+    "宽基/规模": 87,
+    "半导体/芯片": 24,
+    "红利/低波/质量": 23,
+    "其他权益主题": 21,
+    "AI/机器人/计算机": 20,
+    "金融地产": 17,
+    "医药/医疗": 17,
+    "消费": 13,
+    "新能源/电力设备": 12,
+    "周期资源": 11,
+    "通信/5G": 4,
+    "军工": 4
+  },
+  "selected_category_counts": [
+    {
+      "category": "金融地产",
+      "selected_count": 65
+    },
+    {
+      "category": "通信/5G",
+      "selected_count": 29
+    },
+    {
+      "category": "红利/低波/质量",
+      "selected_count": 27
+    },
+    {
+      "category": "宽基/规模",
+      "selected_count": 26
+    },
+    {
+      "category": "半导体/芯片",
+      "selected_count": 23
+    },
+    {
+      "category": "周期资源",
+      "selected_count": 21
+    },
+    {
+      "category": "其他权益主题",
+      "selected_count": 14
+    },
+    {
+      "category": "新能源/电力设备",
+      "selected_count": 11
+    },
+    {
+      "category": "医药/医疗",
+      "selected_count": 7
+    },
+    {
+      "category": "AI/机器人/计算机",
+      "selected_count": 5
+    },
+    {
+      "category": "消费",
+      "selected_count": 3
+    }
+  ],
+  "selected_top_etf": [
+    {
+      "symbol": "516310",
+      "name": "银行ETF易方达",
+      "category": "金融地产",
+      "selected_count": 19
+    },
+    {
+      "symbol": "515450",
+      "name": "红利低波50ETF南方",
+      "category": "红利/低波/质量",
+      "selected_count": 16
+    },
+    {
+      "symbol": "515300",
+      "name": "300红利低波ETF嘉实",
+      "category": "宽基/规模",
+      "selected_count": 16
+    },
+    {
+      "symbol": "515290",
+      "name": "银行ETF天弘",
+      "category": "金融地产",
+      "selected_count": 14
+    },
+    {
+      "symbol": "515880",
+      "name": "通信ETF国泰",
+      "category": "通信/5G",
+      "selected_count": 13
+    },
+    {
+      "symbol": "512800",
+      "name": "银行ETF华宝",
+      "category": "金融地产",
+      "selected_count": 11
+    },
+    {
+      "symbol": "515220",
+      "name": "煤炭ETF国泰",
+      "category": "周期资源",
+      "selected_count": 8
+    },
+    {
+      "symbol": "159980",
+      "name": "有色ETF大成",
+      "category": "周期资源",
+      "selected_count": 8
+    },
+    {
+      "symbol": "513310",
+      "name": "中韩半导体ETF华泰柏瑞",
+      "category": "半导体/芯片",
+      "selected_count": 7
+    },
+    {
+      "symbol": "159851",
+      "name": "金融科技ETF华宝",
+      "category": "金融地产",
+      "selected_count": 7
+    },
+    {
+      "symbol": "159583",
+      "name": "通信ETF富国",
+      "category": "通信/5G",
+      "selected_count": 7
+    },
+    {
+      "symbol": "515050",
+      "name": "通信ETF华夏",
+      "category": "通信/5G",
+      "selected_count": 7
+    },
+    {
+      "symbol": "512040",
+      "name": "价值100ETF富国",
+      "category": "红利/低波/质量",
+      "selected_count": 5
+    },
+    {
+      "symbol": "515100",
+      "name": "红利低波100ETF景顺",
+      "category": "红利/低波/质量",
+      "selected_count": 4
+    },
+    {
+      "symbol": "510230",
+      "name": "金融ETF国泰",
+      "category": "金融地产",
+      "selected_count": 4
+    },
+    {
+      "symbol": "588290",
+      "name": "科创芯片ETF华安",
+      "category": "半导体/芯片",
+      "selected_count": 4
+    },
+    {
+      "symbol": "561160",
+      "name": "电池ETF富国",
+      "category": "新能源/电力设备",
+      "selected_count": 4
+    },
+    {
+      "symbol": "159326",
+      "name": "电网设备ETF华夏",
+      "category": "其他权益主题",
+      "selected_count": 4
+    },
+    {
+      "symbol": "512880",
+      "name": "证券ETF国泰",
+      "category": "金融地产",
+      "selected_count": 4
+    },
+    {
+      "symbol": "588200",
+      "name": "科创芯片ETF嘉实",
+      "category": "半导体/芯片",
+      "selected_count": 4
+    },
+    {
+      "symbol": "159796",
+      "name": "电池ETF汇添富",
+      "category": "新能源/电力设备",
+      "selected_count": 4
+    },
+    {
+      "symbol": "560860",
+      "name": "工业有色ETF万家",
+      "category": "周期资源",
+      "selected_count": 4
+    },
+    {
+      "symbol": "159732",
+      "name": "消费电子ETF华夏",
+      "category": "消费",
+      "selected_count": 3
+    },
+    {
+      "symbol": "512070",
+      "name": "证券保险ETF易方达",
+      "category": "金融地产",
+      "selected_count": 3
+    },
+    {
+      "symbol": "517380",
+      "name": "创新药ETF天弘",
+      "category": "医药/医疗",
+      "selected_count": 3
+    },
+    {
+      "symbol": "561910",
+      "name": "电池ETF招商",
+      "category": "新能源/电力设备",
+      "selected_count": 3
+    },
+    {
+      "symbol": "561330",
+      "name": "矿业ETF国泰",
+      "category": "其他权益主题",
+      "selected_count": 3
+    },
+    {
+      "symbol": "561560",
+      "name": "电力ETF华泰柏瑞",
+      "category": "其他权益主题",
+      "selected_count": 3
+    },
+    {
+      "symbol": "561380",
+      "name": "电网设备ETF国泰",
+      "category": "其他权益主题",
+      "selected_count": 3
+    },
+    {
+      "symbol": "588020",
+      "name": "科创成长ETF易方达",
+      "category": "宽基/规模",
+      "selected_count": 2
+    }
+  ]
+}

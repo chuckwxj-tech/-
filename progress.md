@@ -58,22 +58,44 @@
   - 1499 trades
   - final equity `2594853.608955216`
   - total return `1.594853608955216`
+- Added `docs/METRICS_TODO.md` from remote branch `claude/repo-overview-roadmap-i5ts8m`.
+- Completed Metrics TODO P0:
+  - CAGR
+  - algebraic annualized return
+  - cumulative return column in `equity.csv`
+  - annualized volatility
+  - max drawdown with peak/trough/recovery dates
+  - max underwater days
+  - Sharpe
+  - Calmar
+  - annualized turnover
+  - Plotly equity curve and drawdown curve in `report.html`
+- Completed Experiments TODO P0:
+  - restored MA120 trend-filter comparison against the broad 253-ETF pool
+  - changed momentum targets so missing top-k slots stay in cash instead of reallocating to surviving names
+  - added optional `cash_annual_yield` support to the pandas backtest engine and pipeline
+  - ran the no-filter vs MA120 + cash experiment for 2023-06-30 to 2026-06-30
+  - wrote `docs/P0_TREND_CASH_EXPERIMENT_20260630.md` and `docs/results/p0_trend_cash_20260630/`
 
 ## Unfinished
 
 - The current backtest engine is a minimal research engine. It supports next-bar open execution, cash, trades, positions, and simple costs, but not full risk controls.
-- Parameter scan, walk-forward, advanced reporting, and Streamlit UI are future loops.
+- Metrics TODO P1/P2 remain: Sortino/downside deviation, win rate, profit factor, trading cost stats, IC/ICIR, grouped monotonicity, and long-short spread.
+- Experiments TODO P1/P2 remain: top_k/top5/top8 comparison, same-category cap, lower max_weight, signal parameter comparisons, and IC diagnostics.
+- Parameter scan, walk-forward, and Streamlit UI are future loops.
 
 ## Known Risks
 
 - The local shell has `PYTHONPATH=D:\PythonLibs\Python313\site-packages`, which can override `.venv` packages. Verification commands in this workspace should clear `PYTHONPATH` first.
 - Raw cache files are keyed only by symbol as requested. A later loop should add metadata checks before reusing cached data for a wider date range.
 - Raw and artifact outputs are ignored by git. Re-run the commands in `README.md` if the local cache is removed.
+- P0 trend filtering did not reduce the wide-pool strategy drawdown because it produced only two partial-cash rebalance signals in the 2023-06-30 to 2026-06-30 window.
 
 ## Next Loop Recommendation
 
 Next, improve the research output quality:
 
-1. Add production metrics: CAGR, annualized volatility, Sharpe, max drawdown, and turnover.
-2. Add holdings and monthly return charts to `report.html`.
-3. Add parameter scan and walk-forward workflows.
+1. Run Experiments TODO P1: top5/top8, same-category cap, and lower max_weight to address concentration risk.
+2. Add Metrics TODO P1: Sortino, downside deviation, win rate, profit factor, and cost stats.
+3. Add Metrics TODO P2: IC/ICIR, grouped monotonicity, and long-short spread.
+4. Add parameter scan and walk-forward workflows.

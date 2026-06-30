@@ -6,11 +6,17 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import plotly.graph_objects as go
 import yaml
 
 from aetf_momentum.backtest.costs import CostConfig
 from aetf_momentum.backtest.pandas_engine import BacktestResult, run_backtest
 from aetf_momentum.data.schema import standardize_ohlcv_frame
+from aetf_momentum.research.metrics import (
+    add_cumulative_return,
+    calculate_drawdown_series,
+    calculate_performance_metrics,
+)
 from aetf_momentum.strategy.momentum import MomentumConfig, build_momentum_targets
 
 
@@ -37,11 +43,21 @@ def run_factor_backtest(
     panel = _read_panel(panel_path)
     momentum_config = MomentumConfig.from_mapping(config["momentum"])
     cost_config = CostConfig.from_mapping(config.get("costs"))
-    initial_cash = float(config.get("backtest", {}).get("initial_cash", 1_000_000))
+    backtest_config = config.get("backtest", {})
+    initial_cash = float(backtest_config.get("initial_cash", 1_000_000))
+    cash_annual_yield = float(
+        backtest_config.get("cash_annual_yield", config.get("cash", {}).get("annual_yield", 0.0))
+    )
 
     close = panel.pivot(index="date", columns="symbol", values="close").sort_index()
     targets = build_momentum_targets(close, momentum_config)
-    result = run_backtest(panel, targets, cost_config, initial_cash=initial_cash)
+    result = run_backtest(
+        panel,
+        targets,
+        cost_config,
+        initial_cash=initial_cash,
+        cash_annual_yield=cash_annual_yield,
+    )
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
@@ -51,12 +67,13 @@ def run_factor_backtest(
     summary_path = output_path / "summary.json"
     report_path = output_path / "report.html"
 
-    result.equity.to_csv(equity_path, index=False)
+    equity_with_cum = add_cumulative_return(result.equity, initial_cash)
+    equity_with_cum.to_csv(equity_path, index=False)
     result.trades.to_csv(trades_path, index=False)
     result.positions.to_csv(positions_path, index=False)
     summary = _build_summary(result, factor_name, initial_cash)
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    report_path.write_text(_build_html_report(summary), encoding="utf-8")
+    report_path.write_text(_build_html_report(summary, equity_with_cum), encoding="utf-8")
 
     return FactorBacktestOutput(
         equity_path=equity_path,
@@ -91,7 +108,7 @@ def _build_summary(
 ) -> dict[str, float | int | str]:
     final_equity = float(result.equity["total_equity"].iloc[-1])
     total_return = final_equity / initial_cash - 1
-    return {
+    summary = {
         "factor": factor_name,
         "start": str(pd.Timestamp(result.equity["date"].iloc[0]).date()),
         "end": str(pd.Timestamp(result.equity["date"].iloc[-1]).date()),
@@ -100,18 +117,55 @@ def _build_summary(
         "total_return": total_return,
         "trades": int(len(result.trades)),
     }
+    summary.update(calculate_performance_metrics(result.equity, initial_cash))
+    return summary
 
 
-def _build_html_report(summary: dict[str, float | int | str]) -> str:
+def _build_html_report(summary: dict[str, float | int | str], equity: pd.DataFrame) -> str:
     rows = "\n".join(
         f"<tr><th>{key}</th><td>{value}</td></tr>" for key, value in summary.items()
     )
+    equity_chart = _equity_curve_chart(equity)
+    drawdown_chart = _drawdown_curve_chart(equity)
     return f"""<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><title>AETF Momentum Backtest</title></head>
 <body>
 <h1>AETF Momentum Backtest</h1>
 <table>{rows}</table>
+<h2>Equity Curve</h2>
+{equity_chart}
+<h2>Drawdown Curve</h2>
+{drawdown_chart}
 </body>
 </html>
 """
+
+
+def _equity_curve_chart(equity: pd.DataFrame) -> str:
+    figure = go.Figure()
+    figure.add_trace(
+        go.Scatter(
+            x=equity["date"],
+            y=equity["total_equity"],
+            mode="lines",
+            name="total_equity",
+        )
+    )
+    figure.update_layout(title="Equity Curve", xaxis_title="Date", yaxis_title="Equity")
+    return figure.to_html(full_html=False, include_plotlyjs="cdn")
+
+
+def _drawdown_curve_chart(equity: pd.DataFrame) -> str:
+    drawdown = calculate_drawdown_series(equity)
+    figure = go.Figure()
+    figure.add_trace(
+        go.Scatter(
+            x=equity["date"],
+            y=drawdown,
+            mode="lines",
+            name="drawdown",
+        )
+    )
+    figure.update_layout(title="Drawdown Curve", xaxis_title="Date", yaxis_title="Drawdown")
+    return figure.to_html(full_html=False, include_plotlyjs=False)

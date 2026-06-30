@@ -17,7 +17,7 @@ _BASE_COSTS = {
     "slippage_bps": 5.0,
     "min_fee": 0.0,
 }
-_BASE_BACKTEST = {"initial_cash": 1_000_000}
+_BASE_BACKTEST = {"initial_cash": 1_000_000, "cash_annual_yield": 0.015}
 
 _PRESETS: dict[str, FactorPreset] = {
     "risk_adjusted_momentum": FactorPreset(

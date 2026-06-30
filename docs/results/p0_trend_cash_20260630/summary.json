@@ -1,0 +1,128 @@
+{
+  "assumptions": {
+    "data": {
+      "panel": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\panel_qfq_no_gold.csv",
+      "universe": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\valid_universe_no_gold.csv",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "universe_size": 253,
+      "price_fill": "forward fill after listing; no pre-listing fill"
+    },
+    "costs": {
+      "commission_bps": 2.5,
+      "slippage_bps": 5.0,
+      "min_fee": 0.0
+    },
+    "base_momentum": {
+      "lookbacks": [
+        20,
+        60,
+        120,
+        240
+      ],
+      "weights": [
+        0.2,
+        0.4,
+        0.3,
+        0.1
+      ],
+      "top_k": 3,
+      "max_weight": 0.5,
+      "rebalance_freq": "biweekly",
+      "volatility_adjusted": true,
+      "volatility_lookback": 60
+    },
+    "scenarios": [
+      {
+        "name": "no_trend_filter_top3",
+        "trend_ma": null,
+        "cash_annual_yield": 0.015
+      },
+      {
+        "name": "ma120_cash_top3",
+        "trend_ma": 120,
+        "cash_annual_yield": 0.015
+      }
+    ],
+    "benchmark": "daily equal-weight valid ETF pool, excluding gold ETFs"
+  },
+  "scenarios": [
+    {
+      "name": "no_trend_filter_top3",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 2047086.185351467,
+      "total_return": 1.0470861853514668,
+      "trades": 331,
+      "avg_cash_weight": 0.00826446281008035,
+      "cagr": 0.2823236854796509,
+      "annualized_return": 0.3043942985319587,
+      "annualized_volatility": 0.3331300733263201,
+      "max_drawdown": -0.387214548988012,
+      "max_drawdown_start": "2024-11-07",
+      "max_drawdown_trough": "2025-04-07",
+      "max_drawdown_recovery": "2026-01-28",
+      "max_underwater_days": 298,
+      "sharpe": 0.9137400760386678,
+      "calmar": 0.729114353315251,
+      "annualized_turnover": 23.484895792770367,
+      "rebalance_signals": 77,
+      "cash_only_rebalances": 0,
+      "partial_cash_rebalances": 0,
+      "avg_target_cash_weight": 0.0,
+      "latest_signal_date": "2026-06-26",
+      "latest_signal": "562590,588170,588710",
+      "latest_signal_cash_weight": 0.0
+    },
+    {
+      "name": "ma120_cash_top3",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 2024262.2406904015,
+      "total_return": 1.0242622406904016,
+      "trades": 329,
+      "avg_cash_weight": 0.019983278514614837,
+      "cagr": 0.27734283225813017,
+      "annualized_return": 0.30072660043293187,
+      "annualized_volatility": 0.33388105213291097,
+      "max_drawdown": -0.38721454898805197,
+      "max_drawdown_start": "2024-11-07",
+      "max_drawdown_trough": "2025-04-07",
+      "max_drawdown_recovery": "2026-01-28",
+      "max_underwater_days": 298,
+      "sharpe": 0.9006998106416023,
+      "calmar": 0.7162510628356786,
+      "annualized_turnover": 23.75196624843444,
+      "rebalance_signals": 77,
+      "cash_only_rebalances": 0,
+      "partial_cash_rebalances": 2,
+      "avg_target_cash_weight": 0.012987012987012988,
+      "latest_signal_date": "2026-06-26",
+      "latest_signal": "562590,588170,588710",
+      "latest_signal_cash_weight": 0.0
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "有效池等权持有(剔除黄金)",
+      "start": "2023-06-30",
+      "end": "2026-06-30",
+      "initial": 1000000.0,
+      "final": 1759444.0374990748,
+      "total_return": 0.7594440374990747,
+      "cagr": 0.2166667697026432,
+      "annualized_return": 0.22154162648939352,
+      "annualized_volatility": 0.2247765615487243,
+      "max_drawdown": -0.25321715838100944,
+      "max_drawdown_start": "2023-08-04",
+      "max_drawdown_trough": "2024-02-05",
+      "max_drawdown_recovery": "2024-10-08",
+      "sharpe": 0.9856082189484443,
+      "calmar": 0.8556559558915443
+    }
+  ],
+  "benchmark_source": "docs/results/broad_etf_200_biweekly_top3_20260630/summary.json",
+  "benchmark_note": "Uses the prior accepted broad-pool equal-weight benchmark referenced by docs/EXPERIMENTS_TODO.md."
+}

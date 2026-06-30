@@ -59,3 +59,26 @@ When multiple agents (e.g. Claude and Codex) work together, also follow `docs/CO
   - `refresh=True` bypasses existing cache.
 - Tests must cover schema validation, empty data, duplicate dates, missing prices, missing sessions, symbol normalization, and cache hits.
 - Write `progress.md` with completed work, unfinished work, known risks, and the next loop recommendation.
+
+## Collaboration Model (GitHub as the protocol layer)
+
+You (Codex) are the **executor**. Claude is the brain; GitHub is the source of truth; the human owns merge and any real-money switch. See `docs/decisions/ADR-0000-collaboration-model.md`.
+
+- Implement only what a `docs/tasks/TASK-xxxx-*.md` card or GitHub Issue specifies. Do not invent scope.
+- One TASK = one branch (`task/TASK-xxxx-<slug>`) = one PR. Never commit directly to `main`.
+- Do not add auto-trading or broker execution. First stage is research only.
+- Do not commit `data/`, `artifacts/`, `cache/`, `logs/`, `.env`, tokens, or broker config.
+- New core logic must have tests. Backtest logic must avoid lookahead and default to next-bar execution.
+- Before opening/updating a PR run: `ruff check .`, `pytest`, and the offline smoke backtest
+  (`python -m aetf_momentum.app.cli backtest run --factor-preset daily_momentum --panel examples/sample_panel.csv --output artifacts/smoke`).
+
+## PR Requirements
+
+Use `.github/pull_request_template.md`. Every PR states: what changed, why, linked TASK, test results, risks, follow-ups.
+
+## Strategy PR Merge Gate (hard block)
+
+Any PR touching signals or backtest logic CANNOT be merged unless it answers, in the PR body:
+when the rebalance signal is generated; which bar's price fills the trade and whether it is next-bar;
+commission and slippage; how suspensions and missing data are handled; how pre-listing ETF data is handled;
+whether there is survivorship bias; whether out-of-sample validation was done; and a same-period benchmark comparison is attached.
