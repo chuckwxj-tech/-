@@ -68,11 +68,11 @@ def build_momentum_targets(close: pd.DataFrame, config: MomentumConfig) -> pd.Da
 
     for current_date in rebalance_dates:
         row = scores.loc[current_date].dropna().sort_values(ascending=False)
+        targets.loc[current_date, :] = 0.0
         if row.empty:
             continue
         selected = row.head(config.top_k).index
-        weight = min(1.0 / len(selected), config.max_weight)
-        targets.loc[current_date, :] = 0.0
+        weight = min(1.0 / config.top_k, config.max_weight)
         targets.loc[current_date, selected] = weight
 
     return targets

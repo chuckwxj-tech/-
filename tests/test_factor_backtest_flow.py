@@ -35,6 +35,91 @@ def test_momentum_targets_execute_on_next_bar_only() -> None:
     assert result.trades.iloc[0]["reason"] == "rebalance_from_2024-01-02"
 
 
+def test_trend_filter_leaves_unfilled_slots_in_cash() -> None:
+    panel = _panel_from_rows(
+        [
+            ("2024-01-01", "100000", 100.0, 100.0),
+            ("2024-01-01", "200000", 100.0, 100.0),
+            ("2024-01-02", "100000", 110.0, 110.0),
+            ("2024-01-02", "200000", 90.0, 90.0),
+            ("2024-01-03", "100000", 120.0, 120.0),
+            ("2024-01-03", "200000", 80.0, 80.0),
+        ]
+    )
+    close = panel.pivot(index="date", columns="symbol", values="close")
+
+    targets = build_momentum_targets(
+        close,
+        MomentumConfig(
+            lookbacks=[1],
+            weights=[1.0],
+            top_k=3,
+            max_weight=1.0,
+            rebalance_freq="daily",
+            volatility_adjusted=False,
+            trend_ma=2,
+        ),
+    )
+
+    assert targets.loc[pd.Timestamp("2024-01-03"), "100000"] == 1 / 3
+    assert targets.loc[pd.Timestamp("2024-01-03"), "200000"] == 0.0
+    assert targets.loc[pd.Timestamp("2024-01-03")].sum() == 1 / 3
+
+
+def test_trend_filter_clears_targets_when_no_symbol_qualifies() -> None:
+    panel = _panel_from_rows(
+        [
+            ("2024-01-01", "100000", 100.0, 100.0),
+            ("2024-01-01", "200000", 100.0, 100.0),
+            ("2024-01-02", "100000", 90.0, 90.0),
+            ("2024-01-02", "200000", 90.0, 90.0),
+            ("2024-01-03", "100000", 80.0, 80.0),
+            ("2024-01-03", "200000", 80.0, 80.0),
+        ]
+    )
+    close = panel.pivot(index="date", columns="symbol", values="close")
+
+    targets = build_momentum_targets(
+        close,
+        MomentumConfig(
+            lookbacks=[1],
+            weights=[1.0],
+            top_k=3,
+            max_weight=1.0,
+            rebalance_freq="daily",
+            volatility_adjusted=False,
+            trend_ma=2,
+        ),
+    )
+
+    assert targets.loc[pd.Timestamp("2024-01-03")].tolist() == [0.0, 0.0]
+
+
+def test_run_backtest_accrues_cash_yield_between_sessions() -> None:
+    panel = _panel_from_rows(
+        [
+            ("2024-01-01", "100000", 100.0, 100.0),
+            ("2024-01-02", "100000", 100.0, 100.0),
+            ("2024-01-03", "100000", 100.0, 100.0),
+        ]
+    )
+    targets = pd.DataFrame(
+        {"100000": [0.0, 0.0, 0.0]},
+        index=pd.to_datetime(["2024-01-01", "2024-01-02", "2024-01-03"]),
+    )
+
+    result = run_backtest(
+        panel,
+        targets,
+        CostConfig(commission_bps=0, slippage_bps=0),
+        initial_cash=1000,
+        cash_annual_yield=0.365,
+    )
+
+    assert result.equity.iloc[-1]["cash"] > 1000
+    assert result.equity.iloc[-1]["position_value"] == 0.0
+
+
 def test_factor_backtest_pipeline_writes_artifacts(tmp_path) -> None:
     panel_path = tmp_path / "panel.csv"
     _sample_panel().to_csv(panel_path, index=False)
@@ -81,6 +166,37 @@ backtest:
     assert "Equity Curve" in report_html
     assert "Drawdown Curve" in report_html
     assert "Plotly.newPlot" in report_html
+
+
+def test_factor_backtest_pipeline_applies_cash_yield(tmp_path) -> None:
+    panel_path = tmp_path / "panel.csv"
+    _sample_panel().to_csv(panel_path, index=False)
+
+    strategy_path = tmp_path / "strategy.yaml"
+    strategy_path.write_text(
+        """
+momentum:
+  lookbacks: [20]
+  weights: [1.0]
+  top_k: 1
+  max_weight: 1.0
+  rebalance_freq: daily
+  volatility_adjusted: false
+costs:
+  commission_bps: 0
+  slippage_bps: 0
+  min_fee: 0
+backtest:
+  initial_cash: 1000000
+  cash_annual_yield: 0.365
+""".strip(),
+        encoding="utf-8",
+    )
+
+    output = run_factor_backtest(panel_path, strategy_path, tmp_path / "artifacts")
+    summary = json.loads(output.summary_path.read_text(encoding="utf-8"))
+
+    assert summary["final_equity"] > 1_000_000
 
 
 def test_cli_runs_selected_factor_backtest(tmp_path) -> None:

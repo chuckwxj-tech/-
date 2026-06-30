@@ -28,8 +28,8 @@
 
 ### P0 — 控回撤（预期最有效）
 
-- [ ] **加回 MA120 趋势过滤**：对比"有过滤 vs 无过滤"两版。重点看回撤能否从 -38.7% 大幅下降、夏普能否回到 0.99 以上。这是上次特意去掉的旋钮，是回撤飙高的直接原因。
-- [ ] **空仓切现金/货币基金**：当合格标的不足 top_k（被趋势过滤剔光）时，剩余权重放货币基金（`configs/universe.yaml` 里已有 `511880`，当前 `enabled: false`，需启用）或现金（年化 1.5%）。熊市不硬扛。
+- [x] **加回 MA120 趋势过滤**：对比"有过滤 vs 无过滤"两版。重点看回撤能否从 -38.7% 大幅下降、夏普能否回到 0.99 以上。这是上次特意去掉的旋钮，是回撤飙高的直接原因。`docs/P0_TREND_CASH_EXPERIMENT_20260630.md` 结论：未达标，MA120 + cash 夏普 0.901、最大回撤 -38.72% `(codex)`
+- [x] **空仓切现金/货币基金**：当合格标的不足 top_k（被趋势过滤剔光）时，剩余权重放货币基金（`configs/universe.yaml` 里已有 `511880`，当前 `enabled: false`，需启用）或现金（年化 1.5%）。熊市不硬扛。已选择现金口径，未启用 `511880`；缺口权重留现金并按年化 1.5% 计息 `(codex)`
 
 ### P1 — 分散，降集中度风险
 
@@ -55,9 +55,9 @@
 
 ## 工程要求（遵守 AGENTS.md / COLLABORATION.md）
 
-- [ ] 实验通过配置/参数驱动，不为单次实验硬编码；优先复用现有 `pipeline` 与新的 `metrics.py`。
-- [ ] 每个实验产出结果文件到 `docs/results/<实验名>/`（summary.json + equity.csv），并在该实验的 md 报告里**强制附同区间基准对比**。
-- [ ] 测试先行；收尾跑 `python -m pytest` / `python -m ruff check .` / `python -m aetf_momentum.app.cli --help` 三条全绿。
+- [x] 实验通过配置/参数驱动，不为单次实验硬编码；优先复用现有 `pipeline` 与新的 `metrics.py`。P0 输出 `experiment_config.json`，现金收益接入 `backtest.cash_annual_yield` `(codex)`
+- [x] 每个实验产出结果文件到 `docs/results/<实验名>/`（summary.json + equity.csv），并在该实验的 md 报告里**强制附同区间基准对比**。P0 输出到 `docs/results/p0_trend_cash_20260630/` `(codex)`
+- [x] 测试先行；收尾跑 `python -m pytest` / `python -m ruff check .` / `python -m aetf_momentum.app.cli --help` 三条全绿。P0 行为先写失败测试，再实现；最终验证见本轮提交记录 `(codex)`
 - [ ] 完成的项打勾并署名 `(codex)`，方向性歧义交回 Claude，不自行拍板。
 
 ## 优先级建议

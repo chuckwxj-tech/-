@@ -20,6 +20,7 @@ def run_backtest(
     target_weights: pd.DataFrame,
     costs: CostConfig,
     initial_cash: float = 1_000_000.0,
+    cash_annual_yield: float = 0.0,
 ) -> BacktestResult:
     """Run a simple next-bar ETF allocation backtest using open execution prices."""
     prepared = panel.copy()
@@ -46,6 +47,12 @@ def run_backtest(
     for index, current_date in enumerate(dates):
         turnover_notional = 0.0
         if index > 0:
+            cash = _accrue_cash(
+                cash,
+                previous_date=dates[index - 1],
+                current_date=current_date,
+                annual_yield=cash_annual_yield,
+            )
             signal_date = dates[index - 1]
             if signal_date in aligned_targets.index:
                 signal = aligned_targets.loc[signal_date]
@@ -84,6 +91,18 @@ def run_backtest(
         trades=pd.DataFrame(trade_rows),
         positions=pd.DataFrame(position_rows),
     )
+
+
+def _accrue_cash(
+    cash: float,
+    previous_date: pd.Timestamp,
+    current_date: pd.Timestamp,
+    annual_yield: float,
+) -> float:
+    if cash <= 0 or annual_yield == 0:
+        return cash
+    elapsed_days = max((current_date - previous_date).days, 0)
+    return cash * (1 + annual_yield) ** (elapsed_days / 365)
 
 
 def _rebalance_at_open(

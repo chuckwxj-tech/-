@@ -1,0 +1,47 @@
+{
+  "data": {
+    "panel": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\panel_qfq_no_gold.csv",
+    "universe": "artifacts\\broad_etf_200_biweekly_top3_v3_no_gold\\valid_universe_no_gold.csv",
+    "start": "2023-06-30",
+    "end": "2026-06-30",
+    "universe_size": 253,
+    "price_fill": "forward fill after listing; no pre-listing fill"
+  },
+  "costs": {
+    "commission_bps": 2.5,
+    "slippage_bps": 5.0,
+    "min_fee": 0.0
+  },
+  "base_momentum": {
+    "lookbacks": [
+      20,
+      60,
+      120,
+      240
+    ],
+    "weights": [
+      0.2,
+      0.4,
+      0.3,
+      0.1
+    ],
+    "top_k": 3,
+    "max_weight": 0.5,
+    "rebalance_freq": "biweekly",
+    "volatility_adjusted": true,
+    "volatility_lookback": 60
+  },
+  "scenarios": [
+    {
+      "name": "no_trend_filter_top3",
+      "trend_ma": null,
+      "cash_annual_yield": 0.015
+    },
+    {
+      "name": "ma120_cash_top3",
+      "trend_ma": 120,
+      "cash_annual_yield": 0.015
+    }
+  ],
+  "benchmark": "daily equal-weight valid ETF pool, excluding gold ETFs"
+}

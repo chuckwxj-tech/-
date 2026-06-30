@@ -43,11 +43,21 @@ def run_factor_backtest(
     panel = _read_panel(panel_path)
     momentum_config = MomentumConfig.from_mapping(config["momentum"])
     cost_config = CostConfig.from_mapping(config.get("costs"))
-    initial_cash = float(config.get("backtest", {}).get("initial_cash", 1_000_000))
+    backtest_config = config.get("backtest", {})
+    initial_cash = float(backtest_config.get("initial_cash", 1_000_000))
+    cash_annual_yield = float(
+        backtest_config.get("cash_annual_yield", config.get("cash", {}).get("annual_yield", 0.0))
+    )
 
     close = panel.pivot(index="date", columns="symbol", values="close").sort_index()
     targets = build_momentum_targets(close, momentum_config)
-    result = run_backtest(panel, targets, cost_config, initial_cash=initial_cash)
+    result = run_backtest(
+        panel,
+        targets,
+        cost_config,
+        initial_cash=initial_cash,
+        cash_annual_yield=cash_annual_yield,
+    )
 
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
