@@ -70,6 +70,17 @@ backtest:
     assert summary["factor"] == "momentum"
     assert summary["trades"] > 0
     assert "total_return" in summary
+    assert "cagr" in summary
+    assert "annualized_volatility" in summary
+    assert "max_drawdown" in summary
+    assert "sharpe" in summary
+    assert "calmar" in summary
+    assert "annualized_turnover" in summary
+    assert "cum_return" in output.equity_path.read_text(encoding="utf-8").splitlines()[0]
+    report_html = output.report_path.read_text(encoding="utf-8")
+    assert "Equity Curve" in report_html
+    assert "Drawdown Curve" in report_html
+    assert "Plotly.newPlot" in report_html
 
 
 def test_cli_runs_selected_factor_backtest(tmp_path) -> None:

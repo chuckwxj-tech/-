@@ -58,11 +58,24 @@
   - 1499 trades
   - final equity `2594853.608955216`
   - total return `1.594853608955216`
+- Added `docs/METRICS_TODO.md` from remote branch `claude/repo-overview-roadmap-i5ts8m`.
+- Completed Metrics TODO P0:
+  - CAGR
+  - algebraic annualized return
+  - cumulative return column in `equity.csv`
+  - annualized volatility
+  - max drawdown with peak/trough/recovery dates
+  - max underwater days
+  - Sharpe
+  - Calmar
+  - annualized turnover
+  - Plotly equity curve and drawdown curve in `report.html`
 
 ## Unfinished
 
 - The current backtest engine is a minimal research engine. It supports next-bar open execution, cash, trades, positions, and simple costs, but not full risk controls.
-- Parameter scan, walk-forward, advanced reporting, and Streamlit UI are future loops.
+- Metrics TODO P1/P2 remain: Sortino/downside deviation, win rate, profit factor, trading cost stats, IC/ICIR, grouped monotonicity, and long-short spread.
+- Parameter scan, walk-forward, and Streamlit UI are future loops.
 
 ## Known Risks
 
@@ -74,6 +87,7 @@
 
 Next, improve the research output quality:
 
-1. Add production metrics: CAGR, annualized volatility, Sharpe, max drawdown, and turnover.
+1. Add Metrics TODO P1: Sortino, downside deviation, win rate, profit factor, and cost stats.
 2. Add holdings and monthly return charts to `report.html`.
-3. Add parameter scan and walk-forward workflows.
+3. Add Metrics TODO P2: IC/ICIR, grouped monotonicity, and long-short spread.
+4. Add parameter scan and walk-forward workflows.

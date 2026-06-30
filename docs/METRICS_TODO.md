@@ -15,27 +15,27 @@
 
 ## 一、收益类指标（Return）
 
-- [ ] **CAGR（年化复合收益率）**：`(final/initial)**(252/天数) - 1`
-- [ ] **年化收益率（algebraic）**：日收益均值 × 252（与 CAGR 并列给出）
-- [ ] **累计收益曲线归一化**：在 equity 基础上加一列 `cum_return = total_equity/initial - 1`
+- [x] **CAGR（年化复合收益率）**：`(final/initial)**(252/天数) - 1` `(codex)`
+- [x] **年化收益率（algebraic）**：日收益均值 × 252（与 CAGR 并列给出）`(codex)`
+- [x] **累计收益曲线归一化**：在 equity 基础上加一列 `cum_return = total_equity/initial - 1` `(codex)`
 
 ## 二、风险类指标（Risk）
 
-- [ ] **年化波动率**：日收益标准差 × √252
-- [ ] **最大回撤（Max Drawdown）**：净值曲线峰值到谷底的最大跌幅
-- [ ] **最大回撤区间**：回撤起始日期、谷底日期、（如有）修复日期
-- [ ] **回撤持续天数**：最长水下（underwater）天数
+- [x] **年化波动率**：日收益标准差 × √252 `(codex)`
+- [x] **最大回撤（Max Drawdown）**：净值曲线峰值到谷底的最大跌幅 `(codex)`
+- [x] **最大回撤区间**：回撤起始日期、谷底日期、（如有）修复日期 `(codex)`
+- [x] **回撤持续天数**：最长水下（underwater）天数 `(codex)`
 - [ ] **下行波动率（Downside Deviation）**：只统计负收益的标准差，给 Sortino 用
 
 ## 三、风险调整收益（Risk-adjusted）
 
-- [ ] **Sharpe 比率**：`(年化收益 - rf) / 年化波动率`
+- [x] **Sharpe 比率**：`(年化收益 - rf) / 年化波动率` `(codex)`
 - [ ] **Sortino 比率**：`(年化收益 - rf) / 下行波动率`
-- [ ] **Calmar 比率**：`CAGR / |最大回撤|`
+- [x] **Calmar 比率**：`CAGR / |最大回撤|` `(codex)`
 
 ## 四、交易行为类指标（Trading）
 
-- [ ] **年化换手率（Turnover）**：用 equity 里的 `turnover` 列求均值后年化
+- [x] **年化换手率（Turnover）**：用 equity 里的 `turnover` 列求均值后年化 `(codex)`
 - [ ] **胜率（Win Rate）**：盈利交易笔数 / 总交易笔数（注意按「平仓」配对，或先用日收益为正的占比近似）
 - [ ] **盈亏比（Profit Factor）**：总盈利 / 总亏损（绝对值）
 - [ ] **平均每笔成本**：`trades` 里 `fee + slippage` 合计 / 笔数
@@ -53,12 +53,12 @@
 
 ## 六、工程落地要求
 
-- [ ] 新建 `src/aetf_momentum/research/metrics.py`，所有指标做成**纯函数**（输入 DataFrame，输出 dict），不依赖引擎内部状态，便于单测
-- [ ] 在 `_build_summary()` 中调用 metrics，把上述指标合并进 `summary.json`
-- [ ] 升级 `_build_html_report()`：除指标表外，加 **净值曲线** 和 **回撤曲线** 两张 plotly 图（项目依赖已含 plotly）
-- [ ] 边界处理：天数<2、波动率为 0、最大回撤为 0、无交易等情况返回 `NaN`/`0` 而不报错
-- [ ] **测试先行**（遵守 AGENTS.md）：在 `tests/` 下用构造的已知 equity 序列验证每个指标数值正确（例如给定固定净值序列，手算 Sharpe/MaxDD 后断言）
-- [ ] 收尾运行：`python -m pytest` / `python -m ruff check .` / `python -m aetf_momentum.app.cli --help` 三条全绿
+- [x] 新建 `src/aetf_momentum/research/metrics.py`，所有指标做成**纯函数**（输入 DataFrame，输出 dict），不依赖引擎内部状态，便于单测 `(codex)`
+- [x] 在 `_build_summary()` 中调用 metrics，把上述指标合并进 `summary.json` `(codex)`
+- [x] 升级 `_build_html_report()`：除指标表外，加 **净值曲线** 和 **回撤曲线** 两张 plotly 图（项目依赖已含 plotly）`(codex)`
+- [x] 边界处理：天数<2、波动率为 0、最大回撤为 0、无交易等情况返回 `NaN`/`0` 而不报错 `(codex)`
+- [x] **测试先行**（遵守 AGENTS.md）：在 `tests/` 下用构造的已知 equity 序列验证每个指标数值正确（例如给定固定净值序列，手算 Sharpe/MaxDD 后断言）`(codex)`
+- [x] 收尾运行：`python -m pytest` / `python -m ruff check .` / `python -m aetf_momentum.app.cli --help` 三条全绿 `(codex)`
 
 ## 优先级建议
 
