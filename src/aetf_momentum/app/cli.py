@@ -9,15 +9,18 @@ import typer
 from aetf_momentum import __version__
 from aetf_momentum.data.workflow import update_data_cache
 from aetf_momentum.research.pipeline import run_factor_backtest
+from aetf_momentum.research.v8_pipeline import run_v8_research
 from aetf_momentum.strategy.presets import get_factor_preset_config, list_factor_presets
 
 app = typer.Typer(help="AETF Momentum research CLI.")
 data_app = typer.Typer(help="Data commands.")
 backtest_app = typer.Typer(help="Backtest commands.")
 factor_app = typer.Typer(help="Factor selection commands.")
+research_app = typer.Typer(help="Reproducible research tasks.")
 app.add_typer(data_app, name="data")
 app.add_typer(backtest_app, name="backtest")
 app.add_typer(factor_app, name="factor")
+app.add_typer(research_app, name="research")
 
 DEFAULT_UNIVERSE_PATH = Path("configs/universe.yaml")
 DEFAULT_CACHE_DIR = Path("cache")
@@ -41,6 +44,31 @@ def factor_list() -> None:
     """List factor presets that can be selected for ETF backtests."""
     for preset in list_factor_presets():
         typer.echo(f"{preset.name}: {preset.description}")
+
+
+@research_app.command("v8")
+def research_v8(
+    output: Annotated[
+        Path, typer.Option(help="Output directory.")
+    ] = Path("artifacts/records/v8"),
+    end: Annotated[
+        str, typer.Option(help="Latest complete A-share trading date.")
+    ] = "2026-07-28",
+    initial_capital: Annotated[
+        float, typer.Option(help="Model account size; not treated as verified actual NAV.")
+    ] = 500_000.0,
+) -> None:
+    """Run TASK-0012 risk/cash grid research."""
+    result = run_v8_research(
+        output_dir=output,
+        end_date=end,
+        initial_capital=initial_capital,
+    )
+    typer.echo(f"grid: {result.grid_path}")
+    typer.echo(f"monetized: {result.monetized_path}")
+    typer.echo(f"conclusion: {result.conclusion_path}")
+    typer.echo(f"validation: {result.validation_path}")
+    typer.echo(f"sha256: {result.sha256_path}")
 
 
 @data_app.command("update")

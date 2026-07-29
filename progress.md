@@ -76,6 +76,17 @@
   - added optional `cash_annual_yield` support to the pandas backtest engine and pipeline
   - ran the no-filter vs MA120 + cash experiment for 2023-06-30 to 2026-06-30
   - wrote `docs/P0_TREND_CASH_EXPERIMENT_20260630.md` and `docs/results/p0_trend_cash_20260630/`
+- Completed TASK-0012 V8 risk/cash grid research:
+  - reconstructed strict total return for 588170 / 159781 / 515050 / 588200
+    from unadjusted closes and explicit 1:3 share splits
+  - cross-checked ETF closes with Sina and 511990 hundred-unit income with Eastmoney
+  - spliced the four official indices and disclosed each proxy share plus 60-day tracking error
+  - implemented aggregate-only and aggregate-or-internal trigger definitions with T+1 close execution
+  - implemented commission at 2.5bp with CNY 5 minimum plus 2bp slippage
+  - ran 216 grid rows across long-proxy, short-four-index, and pure-live samples
+  - ran CNY 200k / 500k / 1m monetized and 100-unit round-lot scenarios
+  - wrote the complete V8 artifact package under `artifacts/records/v8_20260729`
+  - verified 35 tests, ruff, CLI help, and the offline smoke backtest
 
 ## Unfinished
 
@@ -83,6 +94,8 @@
 - Metrics TODO P1/P2 remain: Sortino/downside deviation, win rate, profit factor, trading cost stats, IC/ICIR, grouped monotonicity, and long-short spread.
 - Experiments TODO P1/P2 remain: top_k/top5/top8 comparison, same-category cap, lower max_weight, signal parameter comparisons, and IC diagnostics.
 - Parameter scan, walk-forward, and Streamlit UI are future loops.
+- V8 personal decision inputs remain intentionally unresolved: current ETF account NAV,
+  maximum tolerable drawdown, capital horizon, withdrawal needs, and actual commission rate.
 
 ## Known Risks
 
@@ -90,6 +103,10 @@
 - Raw cache files are keyed only by symbol as requested. A later loop should add metadata checks before reusing cached data for a wider date range.
 - Raw and artifact outputs are ignored by git. Re-run the commands in `README.md` if the local cache is removed.
 - P0 trend filtering did not reduce the wide-pool strategy drawdown because it produced only two partial-cash rebalance signals in the 2023-06-30 to 2026-06-30 window.
+- V8 long history uses H30184 for all four risk legs before 2020 and is low confidence.
+  The official H30184 source contains a zero close on 2013-06-28; the run records and drops
+  that invalid observation without interpolation.
+- V8 historical proxy periods cannot reproduce ETF market-price premium/discount or round-lot fills.
 
 ## Next Loop Recommendation
 
@@ -99,3 +116,5 @@ Next, improve the research output quality:
 2. Add Metrics TODO P1: Sortino, downside deviation, win rate, profit factor, and cost stats.
 3. Add Metrics TODO P2: IC/ICIR, grouped monotonicity, and long-short spread.
 4. Add parameter scan and walk-forward workflows.
+5. Replace the V8 scenario account sizes with verified current ETF account inputs before using
+   the monetized table as a personal decision aid.
